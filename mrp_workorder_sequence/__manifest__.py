@@ -4,7 +4,7 @@
 {
     "name": "MRP Work Order Sequence",
     "summary": "adds sequence to production work orders.",
-    "version": "15.0.1.1.0",
+    "version": "15.0.1.2.0",
     "category": "Manufacturing",
     "author": "ForgeFlow, Odoo Community Association (OCA)",
     "development_status": "Beta",
@@ -14,4 +14,5 @@
     "depends": ["mrp"],
     "data": ["views/mrp_workorder_view.xml"],
     "installable": True,
+    "post_init_hook": "post_init_hook",
 }
