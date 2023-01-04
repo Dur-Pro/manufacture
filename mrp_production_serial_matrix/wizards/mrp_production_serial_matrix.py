@@ -5,6 +5,16 @@ from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.float_utils import float_compare, float_is_zero
 
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKCYAN = '\033[96m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
 
 class MrpProductionSerialMatrix(models.TransientModel):
     _name = "mrp.production.serial.matrix"
@@ -248,14 +258,31 @@ class MrpProductionSerialMatrix(models.TransientModel):
                         and l.component_id == move.product_id
                     )
                     if matrix_lines:
-                        self._amend_reservations(move, matrix_lines)
+                        reserved_lots = self._amend_reservations(move, matrix_lines)
                         self._consume_selected_lots(move, matrix_lines)
 
             # Complete MO and create backorder if needed.
             mos += current_mo
             res = current_mo.button_mark_done()
+            available_quantities = {}
+            for lot in reserved_lots:
+                available_quantities[lot.name] = self.env["stock.quant"]._get_available_quantity(
+                    move.product_id,
+                    move.location_id,
+                    lot_id=lot,
+                )
+            print(
+                bcolors.WARNING + f"Available after mark_done: {available_quantities}" + bcolors.ENDC)
             backorder_wizard = self.env["mrp.production.backorder"]
             if isinstance(res, dict) and res.get("res_model") == backorder_wizard._name:
+                for lot in reserved_lots:
+                    available_quantities[lot.name] = self.env["stock.quant"]._get_available_quantity(
+                        move.product_id,
+                        move.location_id,
+                        lot_id=lot,
+                    )
+                print(
+                    bcolors.OKBLUE + f"Available before wizard create: {available_quantities}" + bcolors.ENDC)
                 # create backorders...
                 lines = res.get("context", {}).get(
                     "default_mrp_production_backorder_line_ids"
@@ -267,6 +294,14 @@ class MrpProductionSerialMatrix(models.TransientModel):
                     }
                 )
                 wizard.action_backorder()
+                for lot in reserved_lots:
+                    available_quantities[lot.name] = self.env["stock.quant"]._get_available_quantity(
+                        move.product_id,
+                        move.location_id,
+                        lot_id=lot,
+                    )
+                print(
+                    bcolors.FAIL + f"Available after backorder_wizard.create: {available_quantities}" + bcolors.ENDC)
 
                 backorder_ids = (
                     current_mo.procurement_group_id.mrp_production_ids.filtered(
@@ -316,7 +351,7 @@ class MrpProductionSerialMatrix(models.TransientModel):
                     qty = 1.0
                 self._reserve_lot_in_move(move, lot, qty=qty)
 
-        return True
+        return lots_to_reserve
 
     def _consume_selected_lots(self, move, matrix_lines):
         lots_to_consume = matrix_lines.mapped("component_lot_id")
@@ -339,7 +374,16 @@ class MrpProductionSerialMatrix(models.TransientModel):
             else:
                 ml.qty_done = 0.0
 
+            available_quantity = self.env["stock.quant"]._get_available_quantity(
+                move.product_id,
+                move.location_id,
+                lot_id=ml.lot_id,
+            )
+            print(bcolors.UNDERLINE + f"Available immediately after _consume_selected_lots: {available_quantity}" + bcolors.ENDC)
+
+
     def _reserve_lot_in_move(self, move, lot, qty):
+        print(bcolors.OKCYAN + f"_reserve_lot_in_move for {qty} x {move.product_id.default_code}")
         precision_digits = self.env["decimal.precision"].precision_get(
             "Product Unit of Measure"
         )
@@ -348,6 +392,7 @@ class MrpProductionSerialMatrix(models.TransientModel):
             move.location_id,
             lot_id=lot,
         )
+        print(bcolors.OKGREEN + f"Available: {available_quantity}")
         if (
             float_compare(available_quantity, 0.0, precision_digits=precision_digits)
             <= 0
@@ -362,3 +407,9 @@ class MrpProductionSerialMatrix(models.TransientModel):
             lot_id=lot,
             strict=True,
         )
+        available_quantity = self.env["stock.quant"]._get_available_quantity(
+            move.product_id,
+            move.location_id,
+            lot_id=lot,
+        )
+        print(bcolors.OKBLUE + f"Available immediately after update: {available_quantity}")
