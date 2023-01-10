@@ -301,7 +301,7 @@ class MrpProductionSerialMatrix(models.TransientModel):
                         lot_id=lot,
                     )
                 print(
-                    bcolors.FAIL + f"Available after backorder_wizard.create: {available_quantities}" + bcolors.ENDC)
+                    bcolors.OKCYAN + f"Available after backorder_wizard.create: {available_quantities}" + bcolors.ENDC)
 
                 backorder_ids = (
                     current_mo.procurement_group_id.mrp_production_ids.filtered(
@@ -309,7 +309,17 @@ class MrpProductionSerialMatrix(models.TransientModel):
                     )
                 )
                 current_mo = backorder_ids[0] if backorder_ids else False
-                if not current_mo:
+                if current_mo:
+                    print("Stock moves and lines on new MO :")
+                    for move in current_mo.move_raw_ids:
+                        print(f"{move}: {move.product_qty} x {move.product_id.default_code}")
+                        if move.move_line_ids and len(move.move_line_ids) > 0:
+                            print(f"With lines: ")
+                            for line in move.move_line_ids:
+                                print(f"{line.product_qty} x lot {line.lot_id.name}")
+
+
+            if not current_mo:
                     break
             else:
                 break
