@@ -293,6 +293,13 @@ class MrpProductionSerialMatrix(models.TransientModel):
                         "mrp_production_backorder_line_ids": lines,
                     }
                 )
+                print("Stock moves and lines on old MO :")
+                for move in current_mo.move_raw_ids:
+                    print(f"{move}: {move.product_qty} x {move.product_id.default_code}")
+                    if move.move_line_ids and len(move.move_line_ids) > 0:
+                        print(f"With lines: ")
+                        for line in move.move_line_ids:
+                            print(f"{line.product_qty} x lot {line.lot_id.name}")
                 wizard.action_backorder()
                 for lot in reserved_lots:
                     available_quantities[lot.name] = self.env["stock.quant"]._get_available_quantity(
