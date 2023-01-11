@@ -42,6 +42,7 @@ class MrpProductionSerialMatrix(models.TransientModel):
     )
     include_lots = fields.Boolean(
         string="Include Lots?",
+        default=True,
         help="Include products tracked by Lots in matrix. Product tracket by "
         "serial numbers are always included.",
     )
