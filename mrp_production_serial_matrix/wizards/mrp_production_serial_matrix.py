@@ -225,30 +225,23 @@ class MrpProductionSerialMatrix(models.TransientModel):
         current_mo = self.production_id
         if current_mo.product_qty > 1:
             mos = current_mo._split_productions({current_mo: [1 for i in self.finished_lot_ids]})
-            print(mos)
         else:
             mos = [current_mo]
 
         for index, finished_lot in enumerate(self.finished_lot_ids):
             mo = mos[index]
-            mo.qty_producing = 1.0
-            mo.write({"lot_producing_id": finished_lot.id})
+            mo.write({"lot_producing_id": finished_lot.id,
+                      "qty_producing": 1.0})
+            mo.action_confirm()
             for move in mo.move_raw_ids:
                 line = self.env['stock.move.line'].create(move._prepare_move_line_vals())
                 # Given the layout of the wizard, only one line per production serial per component is possible
                 matrix_line = self.line_ids.filtered(lambda l: (l.finished_lot_id == mo.lot_producing_id
                                                         or l.finished_lot_name == mo.lot_producing_id.name)
                                              and l.component_id == move.product_id)
-                line.write({"lot_id": matrix_line.component_lot_id.id, "product_uom_qty": move.product_uom_qty})
-                line.write({"qty_done": line.product_uom_qty})
-                move.write({"product_uom_qty": line.product_uom_qty,
-                            })
-        for mo in mos:
-            print(f"MO: {mo.id}, producing {mo.qty_producing} x serial {mo.lot_producing_id.name}")
-            for move in mo.move_raw_ids:
-                print(f"\tMove: {move.product_qty} x {move.product_id.default_code}")
-                for line in move.move_line_ids:
-                    print(f"\t\tLine: {line.product_qty} x {line.lot_id.name}")
+                line.write({"lot_id": matrix_line.component_lot_id.id, "product_uom_qty": matrix_line.lot_qty})
+                line.write({"qty_done": matrix_line.lot_qty})
+                move.write({"product_uom_qty": line.product_uom_qty,})
         mos.button_mark_done()
 
         res = {
