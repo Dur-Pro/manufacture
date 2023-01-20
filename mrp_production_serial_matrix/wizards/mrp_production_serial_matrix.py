@@ -44,7 +44,7 @@ class MrpProductionSerialMatrix(models.TransientModel):
         string="Include Lots?",
         default=True,
         help="Include products tracked by Lots in matrix. Product tracket by "
-        "serial numbers are always included.",
+             "serial numbers are always included.",
     )
 
     @api.depends("line_ids", "line_ids.component_lot_id")
@@ -233,16 +233,20 @@ class MrpProductionSerialMatrix(models.TransientModel):
             mo.write({"lot_producing_id": finished_lot.id,
                       "qty_producing": 1.0})
             mo.action_confirm()
-            for move in mo.move_raw_ids:
-                line = self.env['stock.move.line'].create(move._prepare_move_line_vals())
-                # Given the layout of the wizard, only one line per production serial per component is possible
+            for move in mo.move_raw_ids + mo.move_byproduct_ids:
                 matrix_line = self.line_ids.filtered(lambda l: (l.finished_lot_id == mo.lot_producing_id
-                                                        or l.finished_lot_name == mo.lot_producing_id.name)
-                                             and l.component_id == move.product_id)
-                line.write({"lot_id": matrix_line.component_lot_id.id, "product_uom_qty": matrix_line.lot_qty})
-                line.write({"qty_done": matrix_line.lot_qty})
-                move.write({"product_uom_qty": line.product_uom_qty,})
-        mos.button_mark_done()
+                                                                or l.finished_lot_name == mo.lot_producing_id.name) and
+                                                               l.component_id == move.product_id)
+                # If there is no matrix line, then the lot/serial tracking is not active for this component
+                if matrix_line:
+                    move._update_reserved_quantity(move.product_uom_qty, matrix_line.lot_qty, move.location_id,
+                                                   lot_id=matrix_line.component_lot_id)
+                else:
+                    move._update_reserved_quantity(move.product_uom_qty, move.product_uom_qty, move.location_id)
+                for line in move.move_line_ids:
+                    line.write({"qty_done": line.product_qty})
+        for mo in mos:
+            mo.button_mark_done()
 
         res = {
             "domain": [("id", "in", mos.ids)],
