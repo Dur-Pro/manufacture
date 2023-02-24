@@ -48,11 +48,16 @@ class MrpInventory(models.Model):
     date = fields.Date()
     demand_qty = fields.Float(string="Demand")
     supply_qty = fields.Float(string="Supply")
-    initial_on_hand_qty = fields.Float(string="Starting Inventory")
-    final_on_hand_qty = fields.Float(string="Forecasted Inventory")
+    initial_on_hand_qty = fields.Float(
+        string="Starting Inventory", group_operator="avg"
+    )
+    final_on_hand_qty = fields.Float(
+        string="Forecasted Inventory", group_operator="avg"
+    )
     to_procure = fields.Float(compute="_compute_to_procure", store=True)
     running_availability = fields.Float(
         string="Planned Availability",
+        group_operator="avg",
         help="Theoretical inventory level if all planned orders were released.",
     )
     order_release_date = fields.Date(compute="_compute_order_release_date", store=True)
@@ -68,6 +73,11 @@ class MrpInventory(models.Model):
     main_supplier_id = fields.Many2one(
         string="Main Supplier",
         related="product_mrp_area_id.main_supplier_id",
+        readonly=True,
+        store=True,
+    )
+    mrp_planner_id = fields.Many2one(
+        related="product_mrp_area_id.mrp_planner_id",
         readonly=True,
         store=True,
     )

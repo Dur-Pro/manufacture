@@ -21,7 +21,8 @@ Available addons
 ----------------
 addon | version | maintainers | summary
 --- | --- | --- | ---
-[mrp_bom_attribute_match](mrp_bom_attribute_match/) | 15.0.1.0.0 |  | Dynamic BOM component based on product attribute
+[mrp_account_bom_attribute_match](mrp_account_bom_attribute_match/) | 15.0.1.1.1 | [![ivantodorovich](https://github.com/ivantodorovich.png?size=30px)](https://github.com/ivantodorovich) | Glue module between `mrp_account` and `mrp_bom_attribute_match`
+[mrp_bom_attribute_match](mrp_bom_attribute_match/) | 15.0.1.1.0 |  | Dynamic BOM component based on product attribute
 [mrp_bom_component_menu](mrp_bom_component_menu/) | 15.0.1.0.0 |  | MRP BOM Component Menu
 [mrp_bom_hierarchy](mrp_bom_hierarchy/) | 15.0.1.0.0 |  | Make it easy to navigate through BoM hierarchy.
 [mrp_bom_location](mrp_bom_location/) | 15.0.1.0.0 |  | Adds location field to Bill of Materials and its components.
@@ -29,8 +30,8 @@ addon | version | maintainers | summary
 [mrp_finished_backorder_product](mrp_finished_backorder_product/) | 15.0.1.0.0 |  | Be able to see the summary of the finished manufactured orders
 [mrp_lot_number_propagation](mrp_lot_number_propagation/) | 15.0.0.1.0 | [![sebalix](https://github.com/sebalix.png?size=30px)](https://github.com/sebalix) | Propagate a serial number from a component to a finished product
 [mrp_lot_on_hand_first](mrp_lot_on_hand_first/) | 15.0.1.0.0 | [![grindtildeath](https://github.com/grindtildeath.png?size=30px)](https://github.com/grindtildeath) | Allows to display lots on hand first in M2o fields
-[mrp_multi_level](mrp_multi_level/) | 15.0.1.7.1 | [![JordiBForgeFlow](https://github.com/JordiBForgeFlow.png?size=30px)](https://github.com/JordiBForgeFlow) [![LoisRForgeFlow](https://github.com/LoisRForgeFlow.png?size=30px)](https://github.com/LoisRForgeFlow) [![ChrisOForgeFlow](https://github.com/ChrisOForgeFlow.png?size=30px)](https://github.com/ChrisOForgeFlow) | Adds an MRP Scheduler
-[mrp_multi_level_estimate](mrp_multi_level_estimate/) | 15.0.1.0.1 | [![LoisRForgeFlow](https://github.com/LoisRForgeFlow.png?size=30px)](https://github.com/LoisRForgeFlow) | Allows to consider demand estimates using MRP multi level.
+[mrp_multi_level](mrp_multi_level/) | 15.0.1.9.1 | [![JordiBForgeFlow](https://github.com/JordiBForgeFlow.png?size=30px)](https://github.com/JordiBForgeFlow) [![LoisRForgeFlow](https://github.com/LoisRForgeFlow.png?size=30px)](https://github.com/LoisRForgeFlow) [![ChrisOForgeFlow](https://github.com/ChrisOForgeFlow.png?size=30px)](https://github.com/ChrisOForgeFlow) | Adds an MRP Scheduler
+[mrp_multi_level_estimate](mrp_multi_level_estimate/) | 15.0.1.1.0 | [![LoisRForgeFlow](https://github.com/LoisRForgeFlow.png?size=30px)](https://github.com/LoisRForgeFlow) | Allows to consider demand estimates using MRP multi level.
 [mrp_planned_order_matrix](mrp_planned_order_matrix/) | 15.0.1.1.0 |  | Allows to create fixed planned orders on a grid view.
 [mrp_production_component_availability_search](mrp_production_component_availability_search/) | 15.0.1.0.0 | [![ivantodorovich](https://github.com/ivantodorovich.png?size=30px)](https://github.com/ivantodorovich) | Filter manufacturing orders by their components availability state
 [mrp_production_date_planned_finished](mrp_production_date_planned_finished/) | 15.0.1.0.0 | [![ivantodorovich](https://github.com/ivantodorovich.png?size=30px)](https://github.com/ivantodorovich) | Allows to plan production from the desired finish date
@@ -42,6 +43,7 @@ addon | version | maintainers | summary
 [mrp_warehouse_calendar](mrp_warehouse_calendar/) | 15.0.1.0.1 | [![JordiBForgeFlow](https://github.com/JordiBForgeFlow.png?size=30px)](https://github.com/JordiBForgeFlow) | Considers the warehouse calendars in manufacturing
 [mrp_workorder_sequence](mrp_workorder_sequence/) | 15.0.1.2.0 | [![LoisRForgeFlow](https://github.com/LoisRForgeFlow.png?size=30px)](https://github.com/LoisRForgeFlow) | adds sequence to production work orders.
 [quality_control_oca](quality_control_oca/) | 15.0.1.0.0 |  | Generic infrastructure for quality tests.
+[stock_whole_kit_constraint](stock_whole_kit_constraint/) | 15.0.1.0.0 |  | Avoid to deliver a kit partially
 
 [//]: # (end addons)
 

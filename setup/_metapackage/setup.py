@@ -8,6 +8,7 @@ setuptools.setup(
     description="Meta package for oca-manufacture Odoo addons",
     version=version,
     install_requires=[
+        'odoo-addon-mrp_account_bom_attribute_match>=15.0dev,<15.1dev',
         'odoo-addon-mrp_bom_attribute_match>=15.0dev,<15.1dev',
         'odoo-addon-mrp_bom_component_menu>=15.0dev,<15.1dev',
         'odoo-addon-mrp_bom_hierarchy>=15.0dev,<15.1dev',
@@ -29,6 +30,7 @@ setuptools.setup(
         'odoo-addon-mrp_warehouse_calendar>=15.0dev,<15.1dev',
         'odoo-addon-mrp_workorder_sequence>=15.0dev,<15.1dev',
         'odoo-addon-quality_control_oca>=15.0dev,<15.1dev',
+        'odoo-addon-stock_whole_kit_constraint>=15.0dev,<15.1dev',
     ],
     classifiers=[
         'Programming Language :: Python',
