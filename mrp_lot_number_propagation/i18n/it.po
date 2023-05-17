@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2023-01-01 13:45+0000\n"
-"Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
+"PO-Revision-Date: 2023-05-15 19:35+0000\n"
+"Last-Translator: Francesco Foresti <francesco.foresti@ooops404.com>\n"
 "Language-Team: none\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
@@ -20,8 +20,7 @@ msgstr ""
 #: code:addons/mrp_lot_number_propagation/models/product_template.py:0
 #, python-format
 msgid ""
-"A BoM propagating serial numbers requires this product to be tracked as "
-"such."
+"A BoM propagating serial numbers requires this product to be tracked as such."
 msgstr ""
 "Una distinta base che propaga i numeri di serie richiede che questo prodotto "
 "sia tracciato come tale."
@@ -44,6 +43,28 @@ msgstr "Distinta base"
 #: model:ir.model,name:mrp_lot_number_propagation.model_mrp_bom_line
 msgid "Bill of Material Line"
 msgstr "Riga distinta base"
+
+#. module: mrp_lot_number_propagation
+#: code:addons/mrp_lot_number_propagation/models/mrp_production.py:0
+#, python-format
+msgid ""
+"Bill of material is marked for lot number propagation, but there are "
+"multiple components propagating lot number. Please check BOM configuration."
+msgstr ""
+"La distinta base è impostata per la propagazione del numero di lotto, ma ci "
+"sono più componenti che propagano il numero di lotto. Verificare la "
+"configurazione della DB."
+
+#. module: mrp_lot_number_propagation
+#: code:addons/mrp_lot_number_propagation/models/mrp_production.py:0
+#, python-format
+msgid ""
+"Bill of material is marked for lot number propagation, but there are no "
+"components propagating lot number. Please check BOM configuration."
+msgstr ""
+"La distinta base è impostata per la propagazione del numero di lotto, ma non "
+"ci sono componenti che propagano il numero di lotto. Verificare la "
+"configurazione della DB."
 
 #. module: mrp_lot_number_propagation
 #: model:ir.model.fields,field_description:mrp_lot_number_propagation.field_mrp_bom__display_lot_number_propagation
@@ -74,6 +95,15 @@ msgstr "Numero di lotto/matricola"
 #: code:addons/mrp_lot_number_propagation/models/mrp_production.py:0
 #, python-format
 msgid ""
+"Lot/Serial number %s already exists and has been used. Unable to propagate "
+"it."
+msgstr ""
+"Il lotto/seriale %s esiste ed è stato usato. Non è possibile propagarlo."
+
+#. module: mrp_lot_number_propagation
+#: code:addons/mrp_lot_number_propagation/models/mrp_production.py:0
+#, python-format
+msgid ""
 "Lot/Serial number is propagated from a component, you are not allowed to "
 "change it."
 msgstr ""
@@ -91,21 +121,11 @@ msgstr ""
 #: code:addons/mrp_lot_number_propagation/models/mrp_bom_line.py:0
 #, python-format
 msgid ""
-"Only components tracked by serial number can propagate its lot/serial number"
-" to the finished product."
+"Only components tracked by serial number can propagate its lot/serial number "
+"to the finished product."
 msgstr ""
 "Solo i componenti tracciati da una matricola possono propagare il loro "
 "numero di lotto/matricola al prodotto finito."
-
-#. module: mrp_lot_number_propagation
-#: code:addons/mrp_lot_number_propagation/models/mrp_bom_line.py:0
-#, python-format
-msgid ""
-"Only one BoM line can propagate its lot/serial number to the finished "
-"product."
-msgstr ""
-"Solo una riga di DiBa può propagare il suo numero di lotto/matricola al "
-"prodotto finito."
 
 #. module: mrp_lot_number_propagation
 #: model:ir.model,name:mrp_lot_number_propagation.model_product_product
@@ -120,7 +140,7 @@ msgstr "Modello prodotto"
 #. module: mrp_lot_number_propagation
 #: model:ir.model,name:mrp_lot_number_propagation.model_mrp_production
 msgid "Production Order"
-msgstr "Ordine produzione"
+msgstr "Ordine di produzione"
 
 #. module: mrp_lot_number_propagation
 #: model:ir.model.fields,field_description:mrp_lot_number_propagation.field_mrp_bom_line__propagate_lot_number
@@ -141,8 +161,8 @@ msgstr "Movimento di magazzino"
 #. module: mrp_lot_number_propagation
 #: model:ir.model.fields,help:mrp_lot_number_propagation.field_mrp_production__propagated_lot_producing
 msgid ""
-"The BoM used on this manufacturing order is set to propagate lot number from"
-" one of its components. The value will be computed once the corresponding "
+"The BoM used on this manufacturing order is set to propagate lot number from "
+"one of its components. The value will be computed once the corresponding "
 "component is selected."
 msgstr ""
 "La DiBa utilizzata in questo ordine di produzione è impostata per propagare "
@@ -153,8 +173,8 @@ msgstr ""
 #: code:addons/mrp_lot_number_propagation/models/product_template.py:0
 #, python-format
 msgid ""
-"This component is configured to propagate its serial number in the following"
-" Bill of Materials:{boms}'"
+"This component is configured to propagate its serial number in the following "
+"Bill of Materials:{boms}'"
 msgstr ""
 "Questo componente è configurato per propagare la sua matricola nella "
 "seguente DiBa: {boms}'"
@@ -168,3 +188,11 @@ msgid ""
 msgstr ""
 "Con 'Propagazione numero di lotto' abilitata, una riga deve essere "
 "configurata con l'opzione 'Propaga numero di lotto'."
+
+#, python-format
+#~ msgid ""
+#~ "Only one BoM line can propagate its lot/serial number to the finished "
+#~ "product."
+#~ msgstr ""
+#~ "Solo una riga di DiBa può propagare il suo numero di lotto/matricola al "
+#~ "prodotto finito."

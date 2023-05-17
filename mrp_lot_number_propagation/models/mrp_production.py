@@ -42,9 +42,7 @@ class MrpProduction(models.Model):
     def _compute_propagated_lot_producing(self):
         for order in self:
             order.propagated_lot_producing = False
-            move_with_lot = order.move_raw_ids.filtered(
-                lambda o: o.propagate_lot_number
-            )
+            move_with_lot = order._get_propagating_component_move()
             line_with_sn = move_with_lot.move_line_ids.filtered(
                 lambda l: (
                     l.lot_id
@@ -67,12 +65,38 @@ class MrpProduction(models.Model):
         self._set_lot_number_propagation_data_from_bom()
         return res
 
+    def _get_propagating_component_move(self):
+        self.ensure_one()
+        return self.move_raw_ids.filtered(lambda o: o.propagate_lot_number)
+
     def _set_lot_number_propagation_data_from_bom(self):
         """Copy information from BoM to the manufacturing order."""
         for order in self:
-            order.is_lot_number_propagated = order.bom_id.lot_number_propagation
-            for move in order.move_raw_ids:
-                move.propagate_lot_number = move.bom_line_id.propagate_lot_number
+            propagate_lot = order.bom_id.lot_number_propagation
+            if not propagate_lot:
+                continue
+            order.is_lot_number_propagated = propagate_lot
+            propagate_move = order.move_raw_ids.filtered(
+                lambda m: m.bom_line_id.propagate_lot_number
+            )
+            if not propagate_move:
+                raise UserError(
+                    _(
+                        "Bill of material is marked for lot number propagation, but "
+                        "there are no components propagating lot number. "
+                        "Please check BOM configuration."
+                    )
+                )
+            elif len(propagate_move) > 1:
+                raise UserError(
+                    _(
+                        "Bill of material is marked for lot number propagation, but "
+                        "there are multiple components propagating lot number. "
+                        "Please check BOM configuration."
+                    )
+                )
+            else:
+                propagate_move.propagate_lot_number = True
 
     def _post_inventory(self, cancel_backorder=False):
         self._create_and_assign_propagated_lot_number()
@@ -87,13 +111,30 @@ class MrpProduction(models.Model):
                 and m.state not in ("done", "cancel")
             )
             if finish_moves and not finish_moves.quantity_done:
-                lot = self.env["stock.production.lot"].create(
-                    {
-                        "product_id": order.product_id.id,
-                        "company_id": order.company_id.id,
-                        "name": order.propagated_lot_producing,
-                    }
+                lot_model = self.env["stock.production.lot"]
+                lot = lot_model.search(
+                    [
+                        ("product_id", "=", order.product_id.id),
+                        ("company_id", "=", order.company_id.id),
+                        ("name", "=", order.propagated_lot_producing),
+                    ],
+                    limit=1,
                 )
+                if lot.quant_ids:
+                    raise UserError(
+                        _(
+                            "Lot/Serial number %s already exists and has been used. "
+                            "Unable to propagate it."
+                        )
+                    )
+                if not lot:
+                    lot = self.env["stock.production.lot"].create(
+                        {
+                            "product_id": order.product_id.id,
+                            "company_id": order.company_id.id,
+                            "name": order.propagated_lot_producing,
+                        }
+                    )
                 order.with_context(lot_propagation=True).lot_producing_id = lot
 
     def write(self, vals):
