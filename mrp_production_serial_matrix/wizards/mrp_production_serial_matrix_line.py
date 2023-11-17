@@ -14,14 +14,14 @@ class MrpProductionSerialMatrix(models.TransientModel):
     production_id = fields.Many2one(related="wizard_id.production_id")
     component_id = fields.Many2one(comodel_name="product.product")
     component_column_name = fields.Char()
-    finished_lot_id = fields.Many2one(comodel_name="stock.production.lot")
+    finished_lot_id = fields.Many2one(comodel_name="stock.lot")
     finished_lot_name = fields.Char()
     component_lot_id = fields.Many2one(
-        comodel_name="stock.production.lot",
+        comodel_name="stock.lot",
         domain="[('id', 'in', allowed_component_lot_ids)]",
     )
     allowed_component_lot_ids = fields.Many2many(
-        comodel_name="stock.production.lot",
+        comodel_name="stock.lot",
         compute="_compute_allowed_component_lot_ids",
     )
     lot_qty = fields.Float(digits="Product Unit of Measure")
