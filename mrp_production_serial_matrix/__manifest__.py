@@ -14,9 +14,7 @@
     ],
     "data": [
         "security/ir.model.access.csv",
-        # BV: FOR MIGRATION
         "wizards/mrp_production_serial_matrix_view.xml",
-        # BV: FOR MIGRATION
         "views/mrp_production_views.xml",
     ],
     "installable": True,
