@@ -244,7 +244,7 @@ class MrpProductionSerialMatrix(models.TransientModel):
                 else:
                     move._update_reserved_quantity(move.product_uom_qty, move.product_uom_qty, move.location_id)
                 for line in move.move_line_ids:
-                    line.write({"qty_done": line.product_qty})
+                    line.write({"qty_done": line.reserved_qty})
         for mo in mos:
             mo.button_mark_done()
 
