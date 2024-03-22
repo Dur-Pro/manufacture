@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="mrp_production_serial_matrix_view_form" model="ir.ui.view">
+        <field name="name">mrp.production.serial.matrix.form</field>
+        <field name="model">mrp.production.serial.matrix</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group name="info">
+                        <field name="production_id" options='{"no_open": True}' />
+                        <field name="product_id" options='{"no_open": True}' />
+                        <field
+                            invisible="1"
+                            name="company_id"
+                            options='{"no_open": True}'
+                        />
+                    </group>
+                    <group name="settings">
+                        <field name="include_lots" widget="boolean_toggle" />
+                    </group>
+                </group>
+                <group name="finished_lots" string="Finished Product Serial Numbers">
+                    <p class="oe_grey" colspan="2">
+                        Select the Serial Numbers of the Finished Products that are going to be produced in this MO. You can create new ones on the fly if needed.
+                    </p>
+                    <br />
+                    <field
+                        context="{'default_product_id': product_id, 'default_company_id': company_id}"
+                        name="finished_lot_ids"
+                        widget="many2many_tags"
+                    />
+                </group>
+                <group
+                    name="serial_matrix"
+                    string="Components Lot/Serial Numbers Matrix"
+                >
+                    <p class="oe_grey" colspan="2">
+                        Fill each cell with the lot/serial number consumed to produce each finished product serial number
+                    </p>
+                    <br />
+                    <field
+                        colspan="2"
+                        field_value="component_lot_id"
+                        field_x_axis="component_column_name"
+                        field_y_axis="finished_lot_name"
+                        name="line_ids"
+                        nolabel="1"
+                        widget="x2many_2d_matrix"
+                    >
+                        <tree create="false" editable="True" nolabel="1">
+                            <field name="component_column_name" />
+                            <field name="finished_lot_name" />
+                            <field
+                                name="component_lot_id"
+                                options='{"no_create": True}'
+                            />
+                            <field invisible="1" name="component_id" />
+                            <field invisible="1" name="lot_qty" />
+                            <field invisible="1" name="finished_lot_id" />
+                            <field invisible="1" name="allowed_component_lot_ids" />
+                        </tree></field>
+                    <div
+                        class="alert alert-warning text-center"
+                        invisible="lot_selection_warning_count == 0"
+                        role="alert"
+                        style="margin-bottom:0px;"
+                    >
+                        <p>
+                            <i class="fa fa-info-circle" />
+                            Some issues has been detected in your selection:
+                            <br />
+                            <field name="lot_selection_warning_msg" nolabel="1" />
+                            <field invisible="1" name="lot_selection_warning_count" />
+                        </p>
+                    </div>
+                </group>
+                <footer>
+                    <button
+                        class="oe_highlight"
+                        name="button_validate"
+                        string="Validate"
+                        type="object"
+                    />
+                    <button class="oe_link" special="cancel" string="Cancel" />
+                </footer>
+            </form></field>
+    </record>
+    <record id="action_mrp_production_serial_matrix" model="ir.actions.act_window">
+        <field name="name">Serial Numbers and Lot Consumption Matrix</field>
+        <field name="res_model">mrp.production.serial.matrix</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>
